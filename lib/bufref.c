@@ -30,20 +30,21 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
-#define SIGNATURE 0x5c48e9b2    /* Random pattern. */
+#define SIGNATURE 0x5c48e9b2 /* Random pattern. */
 
 /*
  * Init a bufref struct.
  */
 void Curl_bufref_init(struct bufref *br)
 {
-  DEBUGASSERT(br);
-  br->dtor = NULL;
-  br->ptr = NULL;
-  br->len = 0;
+    DEBUGASSERT(br);
+
+    br->dtor = NULL;
+    br->ptr = NULL;
+    br->len = 0;
 
 #ifdef DEBUGBUILD
-  br->signature = SIGNATURE;
+    br->signature = SIGNATURE;
 #endif
 }
 
@@ -54,16 +55,18 @@ void Curl_bufref_init(struct bufref *br)
 
 void Curl_bufref_free(struct bufref *br)
 {
-  DEBUGASSERT(br);
-  DEBUGASSERT(br->signature == SIGNATURE);
-  DEBUGASSERT(br->ptr || !br->len);
+    DEBUGASSERT(br);
+    DEBUGASSERT(br->signature == SIGNATURE);
+    DEBUGASSERT(br->ptr || !br->len);
 
-  if(br->ptr && br->dtor)
-    br->dtor((void *) br->ptr);
+    if (br->ptr && br->dtor)
+    {
+        br->dtor((void *)br->ptr);
+    }
 
-  br->dtor = NULL;
-  br->ptr = NULL;
-  br->len = 0;
+    br->dtor = NULL;
+    br->ptr = NULL;
+    br->len = 0;
 }
 
 /*
@@ -73,13 +76,14 @@ void Curl_bufref_free(struct bufref *br)
 void Curl_bufref_set(struct bufref *br, const void *ptr, size_t len,
                      void (*dtor)(void *))
 {
-  DEBUGASSERT(ptr || !len);
-  DEBUGASSERT(len <= CURL_MAX_INPUT_LENGTH);
+    DEBUGASSERT(ptr || !len);
+    DEBUGASSERT(len <= CURL_MAX_INPUT_LENGTH);
 
-  Curl_bufref_free(br);
-  br->ptr = (const unsigned char *) ptr;
-  br->len = len;
-  br->dtor = dtor;
+    Curl_bufref_free(br);
+
+    br->ptr = (const unsigned char *)ptr;
+    br->len = len;
+    br->dtor = dtor;
 }
 
 /*
@@ -87,11 +91,11 @@ void Curl_bufref_set(struct bufref *br, const void *ptr, size_t len,
  */
 const unsigned char *Curl_bufref_ptr(const struct bufref *br)
 {
-  DEBUGASSERT(br);
-  DEBUGASSERT(br->signature == SIGNATURE);
-  DEBUGASSERT(br->ptr || !br->len);
+    DEBUGASSERT(br);
+    DEBUGASSERT(br->signature == SIGNATURE);
+    DEBUGASSERT(br->ptr || !br->len);
 
-  return br->ptr;
+    return br->ptr;
 }
 
 /*
@@ -99,29 +103,34 @@ const unsigned char *Curl_bufref_ptr(const struct bufref *br)
  */
 size_t Curl_bufref_len(const struct bufref *br)
 {
-  DEBUGASSERT(br);
-  DEBUGASSERT(br->signature == SIGNATURE);
-  DEBUGASSERT(br->ptr || !br->len);
+    DEBUGASSERT(br);
+    DEBUGASSERT(br->signature == SIGNATURE);
+    DEBUGASSERT(br->ptr || !br->len);
 
-  return br->len;
+    return br->len;
 }
 
 CURLcode Curl_bufref_memdup(struct bufref *br, const void *ptr, size_t len)
 {
-  unsigned char *cpy = NULL;
+    unsigned char *cpy = NULL;
 
-  DEBUGASSERT(br);
-  DEBUGASSERT(br->signature == SIGNATURE);
-  DEBUGASSERT(br->ptr || !br->len);
-  DEBUGASSERT(ptr || !len);
-  DEBUGASSERT(len <= CURL_MAX_INPUT_LENGTH);
+    DEBUGASSERT(br);
+    DEBUGASSERT(br->signature == SIGNATURE);
+    DEBUGASSERT(br->ptr || !br->len);
+    DEBUGASSERT(ptr || !len);
+    DEBUGASSERT(len <= CURL_MAX_INPUT_LENGTH);
 
-  if(ptr) {
-    cpy = Curl_memdup0(ptr, len);
-    if(!cpy)
-      return CURLE_OUT_OF_MEMORY;
-  }
+    if (ptr)
+    {
+        cpy = Curl_memdup0(ptr, len);
 
-  Curl_bufref_set(br, cpy, len, curl_free);
-  return CURLE_OK;
+        if (!cpy)
+        {
+            return CURLE_OUT_OF_MEMORY;
+        }
+    }
+
+    Curl_bufref_set(br, cpy, len, curl_free);
+
+    return CURLE_OK;
 }

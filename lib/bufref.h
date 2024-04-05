@@ -1,5 +1,3 @@
-#ifndef HEADER_CURL_BUFREF_H
-#define HEADER_CURL_BUFREF_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -24,25 +22,27 @@
  *
  ***************************************************************************/
 
+#ifndef HEADER_CURL_BUFREF_H
+#define HEADER_CURL_BUFREF_H
+
 /*
  * Generic buffer reference.
  */
-struct bufref {
-  void (*dtor)(void *);         /* Associated destructor. */
-  const unsigned char *ptr;     /* Referenced data buffer. */
-  size_t len;                   /* The data size in bytes. */
+struct bufref
+{
+    void (*dtor)(void *);     /* Associated destructor. */
+    const unsigned char *ptr; /* Referenced data buffer. */
+    size_t len;               /* The data size in bytes. */
 #ifdef DEBUGBUILD
-  int signature;                /* Detect API use mistakes. */
+    int signature; /* Detect API use mistakes. */
 #endif
 };
 
-
 void Curl_bufref_init(struct bufref *br);
-void Curl_bufref_set(struct bufref *br, const void *ptr, size_t len,
-                     void (*dtor)(void *));
+void Curl_bufref_set(struct bufref *br, const void *ptr, size_t len, void (*dtor)(void *));
 const unsigned char *Curl_bufref_ptr(const struct bufref *br);
 size_t Curl_bufref_len(const struct bufref *br);
 CURLcode Curl_bufref_memdup(struct bufref *br, const void *ptr, size_t len);
 void Curl_bufref_free(struct bufref *br);
 
-#endif
+#endif /* HEADER_CURL_BUFREF_H */

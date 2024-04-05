@@ -29,32 +29,36 @@
 #include <curl/curl.h>
 #include "llist.h"
 
-enum alpnid {
-  ALPN_none = 0,
-  ALPN_h1 = CURLALTSVC_H1,
-  ALPN_h2 = CURLALTSVC_H2,
-  ALPN_h3 = CURLALTSVC_H3
+enum alpnid
+{
+    ALPN_none = 0,
+    ALPN_h1 = CURLALTSVC_H1,
+    ALPN_h2 = CURLALTSVC_H2,
+    ALPN_h3 = CURLALTSVC_H3
 };
 
-struct althost {
-  char *host;
-  unsigned short port;
-  enum alpnid alpnid;
+struct althost
+{
+    char *host;
+    unsigned short port;
+    enum alpnid alpnid;
 };
 
-struct altsvc {
-  struct althost src;
-  struct althost dst;
-  time_t expires;
-  bool persist;
-  int prio;
-  struct Curl_llist_element node;
+struct altsvc
+{
+    struct althost src;
+    struct althost dst;
+    time_t expires;
+    bool persist;
+    int prio;
+    struct Curl_llist_element node;
 };
 
-struct altsvcinfo {
-  char *filename;
-  struct Curl_llist list; /* list of entries */
-  long flags; /* the publicly set bitmask */
+struct altsvcinfo
+{
+    char *filename;
+    struct Curl_llist list; /* list of entries */
+    long flags;             /* the publicly set bitmask */
 };
 
 const char *Curl_alpnid2str(enum alpnid id);
@@ -75,7 +79,7 @@ bool Curl_altsvc_lookup(struct altsvcinfo *asi,
                         const int versions); /* CURLALTSVC_H* bits */
 #else
 /* disabled */
-#define Curl_altsvc_save(a,b,c)
+#define Curl_altsvc_save(a, b, c)
 #define Curl_altsvc_cleanup(x)
 #endif /* !CURL_DISABLE_HTTP && !CURL_DISABLE_ALTSVC */
 #endif /* HEADER_CURL_ALTSVC_H */

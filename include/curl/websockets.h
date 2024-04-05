@@ -1,5 +1,3 @@
-#ifndef CURLINC_WEBSOCKETS_H
-#define CURLINC_WEBSOCKETS_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -23,6 +21,9 @@
  * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
+
+#ifndef CURLINC_WEBSOCKETS_H
+#define CURLINC_WEBSOCKETS_H
 
 #ifdef  __cplusplus
 extern "C" {

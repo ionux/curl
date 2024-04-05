@@ -1,5 +1,3 @@
-#ifndef HEADER_CURL_VAUTH_H
-#define HEADER_CURL_VAUTH_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -24,9 +22,13 @@
  *
  ***************************************************************************/
 
+#ifndef HEADER_CURL_VAUTH_H
+#define HEADER_CURL_VAUTH_H
+
 #include <curl/curl.h>
 
 #include "bufref.h"
+#include <stdbool.h>
 
 struct Curl_easy;
 

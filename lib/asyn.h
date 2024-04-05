@@ -1,5 +1,3 @@
-#ifndef HEADER_CURL_ASYN_H
-#define HEADER_CURL_ASYN_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -23,6 +21,11 @@
  * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
+
+#ifndef HEADER_CURL_ASYN_H
+#define HEADER_CURL_ASYN_H
+
+#include <curl/curl.h>
 
 #include "curl_setup.h"
 #include "curl_addrinfo.h"

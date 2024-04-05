@@ -1,5 +1,3 @@
-#ifndef HEADER_CURL_DIGEST_H
-#define HEADER_CURL_DIGEST_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -24,6 +22,9 @@
  *
  ***************************************************************************/
 
+#ifndef HEADER_CURL_DIGEST_H
+#define HEADER_CURL_DIGEST_H
+
 #include <curl/curl.h>
 
 #ifndef CURL_DISABLE_DIGEST_AUTH
@@ -32,8 +33,7 @@
 #define DIGEST_MAX_CONTENT_LENGTH         1024
 
 /* This is used to extract the realm from a challenge message */
-bool Curl_auth_digest_get_pair(const char *str, char *value, char *content,
-                               const char **endptr);
+bool Curl_auth_digest_get_pair(const char *str, char *value, char *content, const char **endptr);
 
 #endif
 

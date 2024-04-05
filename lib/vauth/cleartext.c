@@ -27,9 +27,9 @@
 
 #include "curl_setup.h"
 
-#if !defined(CURL_DISABLE_IMAP) || !defined(CURL_DISABLE_SMTP) ||       \
-  !defined(CURL_DISABLE_POP3) || \
-  (!defined(CURL_DISABLE_LDAP) && defined(USE_OPENLDAP))
+#if !defined(CURL_DISABLE_IMAP) || !defined(CURL_DISABLE_SMTP) || \
+    !defined(CURL_DISABLE_POP3) ||                                \
+    (!defined(CURL_DISABLE_LDAP) && defined(USE_OPENLDAP))
 
 #include <curl/curl.h>
 #include "urldata.h"
@@ -59,41 +59,52 @@
  *
  * Returns CURLE_OK on success.
  */
-CURLcode Curl_auth_create_plain_message(const char *authzid,
-                                        const char *authcid,
-                                        const char *passwd,
-                                        struct bufref *out)
+CURLcode Curl_auth_create_plain_message(const char *authzid, const char *authcid, const char *passwd, struct bufref *out)
 {
-  char *plainauth;
-  size_t plainlen;
-  size_t zlen;
-  size_t clen;
-  size_t plen;
+    char *plainauth = NULL;
+    size_t plainlen = 0;
+    size_t zlen = 0;
+    size_t clen = 0;
+    size_t plen = 0;
 
-  zlen = (authzid == NULL ? 0 : strlen(authzid));
-  clen = strlen(authcid);
-  plen = strlen(passwd);
+    zlen = (authzid == NULL ? 0 : strlen(authzid));
+    clen = strnlen(authcid, 256);
+    plen = strnlen(passwd, 256);
 
-  /* Compute binary message length. Check for overflows. */
-  if((zlen > SIZE_T_MAX/4) || (clen > SIZE_T_MAX/4) ||
-     (plen > (SIZE_T_MAX/2 - 2)))
-    return CURLE_OUT_OF_MEMORY;
-  plainlen = zlen + clen + plen + 2;
+    /* Compute binary message length. Check for overflows. */
+    if ((zlen > SIZE_T_MAX / 4) || (clen > SIZE_T_MAX / 4) || (plen > (SIZE_T_MAX / 2 - 2)))
+    {
+        return CURLE_OUT_OF_MEMORY;
+    }
 
-  plainauth = malloc(plainlen + 1);
-  if(!plainauth)
-    return CURLE_OUT_OF_MEMORY;
+    plainlen = zlen + clen + plen + 2;
 
-  /* Calculate the reply */
-  if(zlen)
-    memcpy(plainauth, authzid, zlen);
-  plainauth[zlen] = '\0';
-  memcpy(plainauth + zlen + 1, authcid, clen);
-  plainauth[zlen + clen + 1] = '\0';
-  memcpy(plainauth + zlen + clen + 2, passwd, plen);
-  plainauth[plainlen] = '\0';
-  Curl_bufref_set(out, plainauth, plainlen, curl_free);
-  return CURLE_OK;
+    plainauth = malloc(plainlen + 1);
+
+    if (!plainauth)
+    {
+        return CURLE_OUT_OF_MEMORY;
+    }
+
+    /* Calculate the reply */
+    if (zlen)
+    {
+        memcpy(plainauth, authzid, zlen);
+    }
+
+    plainauth[zlen] = '\0';
+
+    memcpy(plainauth + zlen + 1, authcid, clen);
+
+    plainauth[zlen + clen + 1] = '\0';
+
+    memcpy(plainauth + zlen + clen + 2, passwd, plen);
+
+    plainauth[plainlen] = '\0';
+
+    Curl_bufref_set(out, plainauth, plainlen, curl_free);
+
+    return CURLE_OK;
 }
 
 /*
@@ -111,8 +122,8 @@ CURLcode Curl_auth_create_plain_message(const char *authzid,
  */
 CURLcode Curl_auth_create_login_message(const char *valuep, struct bufref *out)
 {
-  Curl_bufref_set(out, valuep, strlen(valuep), NULL);
-  return CURLE_OK;
+    Curl_bufref_set(out, valuep, strlen(valuep), NULL);
+    return CURLE_OK;
 }
 
 /*
@@ -131,8 +142,8 @@ CURLcode Curl_auth_create_login_message(const char *valuep, struct bufref *out)
 CURLcode Curl_auth_create_external_message(const char *user,
                                            struct bufref *out)
 {
-  /* This is the same formatting as the login message */
-  return Curl_auth_create_login_message(user, out);
+    /* This is the same formatting as the login message */
+    return Curl_auth_create_login_message(user, out);
 }
 
 #endif /* if no users */
